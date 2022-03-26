@@ -10,7 +10,6 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, log
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_wtf import FlaskForm
-from werkzeug.utils import secure_filename
 from wtforms import StringField, PasswordField, SubmitField, validators
 from wtforms.validators import InputRequired, Length, ValidationError
 
