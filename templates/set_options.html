@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Contact Form - Free Bulma template</title>
+	<title>Cloud Printing Options</title>
 	<link rel="shortcut icon" href="../images/fav_icon.png" type="image/x-icon">
 	<!-- Bulma Version 0.9.0-->
 	<link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
@@ -55,13 +55,12 @@
 			<div class="container has-text-centered">
 				<div class="columns is-8 is-variable ">
 					<div class="column is-half has-text-left">
-						<h1 class="title is-1">Contact Us</h1>
-                        <iframe src="{{filePath}}" frameborder="0" width="100%" height="500px" id="myFrame"></iframe>
+                        <iframe src="{{filePath}}" frameborder="0" width="100%" height="720px" id="myFrame"></iframe>
 					</div>
 					<div class="column is_half has-text-left">
                         <div>
-                            <h3 class="title is-1">
-                                Print Cost Details
+                            <h3 class="title is-3 has-text-centered">
+                                Printing Details
                             </h3>
                             <table class="table is-fullwidth">
                               <tbody>
@@ -114,6 +113,33 @@
                                 <input class="input is-medium" id="custom" type='hidden' name="custom" placeholder="0,1-4,5" value="0">
                             </div>
                             <p class="help is-danger is-hidden" id="warn_cs"></p>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Payment Method</label>
+                            <div class="select is-rounded is-fullwidth">
+                              <select name="payment_method" id="payment_method">
+                                  <option value="bkash">Bkash</option>
+                                  <option value="nogod">Nogod</option>
+                                  <option value="rocket">Rocket</option>
+                                  <option value="upday">UPay</option>
+                                  <option value="dbbl">Dutch Bangla Bank</option>
+                              </select>
+                            </div>
+                        </div>
+
+                         <div class="field">
+                             <label class="label">A/C No:</label>
+                            <div class="control">
+                                <input class="input is-medium" id="account" type='text' name="account" placeholder="Account" required>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                             <label class="label">Transaction ID</label>
+                            <div class="control">
+                                <input class="input is-medium" id="tnx" type='text' name="tnx" placeholder="Transaction ID" required>
+                            </div>
                         </div>
 
                         <div class="control">
@@ -191,7 +217,17 @@
     $('#t_pg').text(total_page);
     $('#t_cp').text(total_copy);
     $('#t_cost').text(total_cost);
-        return {"copies": total_copy, "t_page": total_page, "t_cost": total_cost, "pages": pages}
+        return {
+            "total_copies": total_copy,
+            "total_cost": total_cost,
+            "pages": pages,
+            "payment_verification_status":'verified',
+            "print_progress_status": "in queue",
+            "payment_transaction_id": $('#tnx').val(),
+            'payment_method': $('#payment_method').val(),
+            'account': $('#account').val()
+
+        }
     }
 </script>
 
@@ -228,13 +264,15 @@
 * */
     $('#checkout').on('click', function () {
         formData = calculateCost(); //data to send
-        $.ajax({
-            url : "/accept_print_info", // Url of backend
+        console.log(formData);
+       $.ajax({
+            url : "/accept_print_info/{{ record_id }}", // Url of backend
             type: "POST", // data type (can be get, post, put, delete)
             data : formData, // data in json format
             async : false, // enable or disable async (optional, but suggested as false if you need to populate data afterwards)
             success: function(response, textStatus, jqXHR) {
                 console.log(response);
+                window.location.href = '/dashboard';
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR);
@@ -242,6 +280,7 @@
                 console.log(errorThrown);
             }
         });
+
 });
 
 </script>
